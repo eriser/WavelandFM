@@ -23,7 +23,6 @@ public:
     void updateAngleDelta ();
     void setOpPitch(float oppitch);
     void setOpLinearFm(float linearFM);
-    void setIndexFM (float index);
     void ResetPhase();
     void SetENVParam (float attack, float decay, float sustain, float release);
     void StartOP(float midiNote, float sampleRate);
@@ -65,7 +64,7 @@ public:
 private:
     float angleDelta, currentAngle;
     
-    float OpSampleRate, OpMidiPitch, OpLinearFM, IndexFM;
+    float OpSampleRate, OpMidiPitch, OpLinearFM;
     
     const float twopi = 2.0f * float_Pi;
     

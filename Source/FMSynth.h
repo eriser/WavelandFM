@@ -48,9 +48,9 @@ public:
 private:
     void processBlock (AudioBuffer<float>& outputbuffer, int startSample, int numSamples);
     
-    float level;
+    float level, noteVelocity;
     
-    float currentMidiNote, currentBend, currentMidiPitch;
+    float currentMidiNote, currentBend, currentMidiPitch, index21;
     
     float const twopi = 2 * float_Pi;
     
