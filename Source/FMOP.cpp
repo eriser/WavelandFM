@@ -14,7 +14,8 @@ FMOP::FMOP()
 : angleDelta (0.0f),
   currentAngle (0.0f),
   OpMidiPitch (0.0f),
-  OpLinearFM (0.0f)
+  OpLinearFM (0.0f),
+  IndexFM(0.0f)
 {
     OpENV.setEnvelopeState(Envelope::idleState);
 }
@@ -30,7 +31,7 @@ float FMOP::getOpstate()
 
 void FMOP::updateAngleDelta()
 {
-    angleDelta = (mtf(OpMidiPitch + OpLinearFM) / OpSampleRate * twopi);
+    angleDelta = (mtf(OpMidiPitch) / OpSampleRate * twopi);
 }
 
 void FMOP::setOpPitch(float oppitch)
@@ -41,6 +42,11 @@ void FMOP::setOpPitch(float oppitch)
 void FMOP::setOpLinearFm(float linearFM)
 {
     OpLinearFM = linearFM;
+}
+
+void FMOP::setIndexFM(float index)
+{
+    IndexFM = index;
 }
 
 void FMOP::ResetPhase()
@@ -74,5 +80,5 @@ float FMOP::RenderOP()
     currentAngle += angleDelta;
     if (currentAngle >= twopi)
         currentAngle -= twopi;
-    return SineOfAngle (currentAngle) * OpENV.getenvelopeLevel();
+    return SineOfAngle (currentAngle + OpLinearFM) * OpENV.getenvelopeLevel();
 }

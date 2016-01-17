@@ -23,6 +23,7 @@ public:
     void updateAngleDelta ();
     void setOpPitch(float oppitch);
     void setOpLinearFm(float linearFM);
+    void setIndexFM (float index);
     void ResetPhase();
     void SetENVParam (float attack, float decay, float sustain, float release);
     void StartOP(float midiNote, float sampleRate);
@@ -53,7 +54,7 @@ public:
         int indexIntPart;
         float indexDecimelPart;
         float difference;
-        index = (angle / twopi * 256);
+        index = (fmod( std::abs(angle), twopi) / twopi * 256);
         indexIntPart = static_cast<int>(index);
         indexDecimelPart = index - indexIntPart;
         difference = sin256[indexIntPart + 1] - sin256[indexIntPart];
@@ -64,7 +65,7 @@ public:
 private:
     float angleDelta, currentAngle;
     
-    float OpSampleRate, OpMidiPitch, OpLinearFM;
+    float OpSampleRate, OpMidiPitch, OpLinearFM, IndexFM;
     
     const float twopi = 2.0f * float_Pi;
     

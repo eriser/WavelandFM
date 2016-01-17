@@ -15,6 +15,8 @@ currentMidiNote(0.0f)
 {
     Op1.SetENVParam(0.0f, 0.0f, 1.0f, 0.4f);
     Op2.SetENVParam(0.0f, 0.5f, 0.7f, 0.2f);
+    Op1.setIndexFM (0.9f);
+    Op2.setIndexFM (0.0f);
 }
 
 FMSynthVoice::~FMSynthVoice() {}
@@ -63,12 +65,12 @@ void FMSynthVoice::processBlock(AudioBuffer<float> &outputbuffer, int startSampl
         {
 
             const float currentSample = (Op1.RenderOP() * level);
+            Op1.setOpLinearFm(100.0f * Op2.RenderOP());
+            Op1.updateAngleDelta();
             
             for (int i = outputbuffer.getNumChannels(); --i >= 0;)
             {
                 outputbuffer.addSample(i, startSample, currentSample);
-                Op1.setOpLinearFm(12.0f * Op2.RenderOP() * (level * 6.667));
-                Op1.updateAngleDelta();
             }
             ++startSample;
         }
