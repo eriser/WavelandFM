@@ -45,7 +45,7 @@ void FMOP::setOpLinearFm(float linearFM)
 
 void FMOP::ResetPhase()
 {
-    currentAngle = 0.0f;
+    currentAngle = float_Pi * 1.5f;
 }
 
 void FMOP::SetENVParam(float attack, float decay, float sustain, float release)
