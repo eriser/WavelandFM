@@ -61,13 +61,14 @@ void FMSynthVoice::processBlock(AudioBuffer<float> &outputbuffer, int startSampl
     {
         while (--numSamples >= 0)
         {
-            Op1.updateAngleDelta();
-            Op1.setOpLinearFm(12.0f * Op2.RenderOP() * (level * 6.667));
+
             const float currentSample = (Op1.RenderOP() * level);
             
             for (int i = outputbuffer.getNumChannels(); --i >= 0;)
             {
                 outputbuffer.addSample(i, startSample, currentSample);
+                Op1.setOpLinearFm(12.0f * Op2.RenderOP() * (level * 6.667));
+                Op1.updateAngleDelta();
             }
             ++startSample;
         }
