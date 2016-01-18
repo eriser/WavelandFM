@@ -74,5 +74,5 @@ float FMOP::RenderOP()
     currentAngle += angleDelta;
     if (currentAngle >= twopi)
         currentAngle -= twopi;
-    return SineOfAngle (currentAngle + OpLinearFM) * OpENV.getenvelopeLevel();
+    return SineOfAngle (currentAngle + OpLinearFM) * std::pow(OpENV.getenvelopeLevel(), 4.0f);
 }
