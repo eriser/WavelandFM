@@ -14,7 +14,8 @@ FMOP::FMOP()
 : angleDelta (0.0f),
   currentAngle (0.0f),
   OpMidiPitch (0.0f),
-  OpLinearFM (0.0f)
+  OpLinearFM (0.0f),
+  envShape (0.85f)
 {
     OpENV.setEnvelopeState(Envelope::idleState);
 }
@@ -71,8 +72,11 @@ void FMOP::StopOp()
 float FMOP::RenderOP()
 {
     OpENV.renderEnvelope();
+    if (OpENV.getEnvelopeState() == Envelope::idleState)
+        return 0.0f;
+    
     currentAngle += angleDelta;
     if (currentAngle >= twopi)
         currentAngle -= twopi;
-    return SineOfAngle (currentAngle + OpLinearFM) * std::pow(OpENV.getenvelopeLevel(), 4.0f);
+    return SineOfAngle (currentAngle + OpLinearFM) * std::pow(OpENV.getenvelopeLevel(), calulateShapeCoeff(envShape));
 }

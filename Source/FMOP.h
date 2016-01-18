@@ -61,10 +61,24 @@ public:
         return sin256[indexIntPart] + (difference * indexDecimelPart);
     }
     
+    inline float calulateShapeCoeff (float ENVShapeParam)
+    {
+        float index;
+        int indexIntPart;
+        float indexDecimelPart;
+        float difference;
+        index = ENVShapeParam * 51;
+        indexIntPart = static_cast<int>(index);
+        indexDecimelPart = index - indexIntPart;
+        difference = SCoef[indexIntPart + 1] - SCoef[indexIntPart];
+        
+        return SCoef[indexIntPart] + (difference * indexDecimelPart);
+    }
+    
 private:
     float angleDelta, currentAngle;
     
-    float OpSampleRate, OpMidiPitch, OpLinearFM;
+    float OpSampleRate, OpMidiPitch, OpLinearFM, envShape;
     
     const float twopi = 2.0f * float_Pi;
     
@@ -131,6 +145,23 @@ private:
         8372.018090, 8869.844191, 9397.272573, 9956.063479, 10548.08182, 11175.30341, 11839.82153, 12543.85395, 13289.75032, 14080.00000,
         14917.24037, 15804.26564, 16744.03618, 17739.68838, 18794.54515, 19912.12696, 21096.16364, 22350.60681, 23679.64305, 25087.70790,
         26579.50065, 28160.00000, 29834.48074, 31608.53128, 33488.07236, 35479.37677, 37589.09029, 39824.25392, 42192.32728, 44701.21362,
+    };
+    
+    float SCoef [52] =
+    {
+        0.135335, 0.146607, 0.158817, 0.172045, 0.186374,
+        0.201897, 0.218712, 0.236928, 0.256661, 0.278037,
+        0.301194, 0.326280, 0.353455, 0.382893, 0.414783,
+        0.449329, 0.486752, 0.527292, 0.571209, 0.618783,
+        0.670320, 0.726149, 0.786628, 0.852144, 0.923116,
+        
+        1.000000, 1.083287, 1.173511, 1.271249, 1.377128,
+        1.491825, 1.616074, 1.750673, 1.896481, 2.054433,
+        2.225541, 2.410900, 2.611696, 2.829217, 3.064854,
+        3.320117, 3.596640, 3.896193, 4.220696, 4.572225,
+        4.953032, 5.365556, 5.812437, 6.296538, 6.820958,
+        
+        7.389056, 8.004469,
     };
     
 };
