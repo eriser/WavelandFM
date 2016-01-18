@@ -15,6 +15,7 @@ Envelope::Envelope ()
   decay (0.0f),
   sustain (1.0f),
   release (0.1f),
+  shape (0.5f),
   envelopeLevel(0.0),
   envelopeState (idleState)
 {
@@ -28,12 +29,13 @@ void Envelope::setSampleRate(float SRate)
     sampleRate = SRate;
 }
 
-void Envelope::setEnvelopeParams (float attackParam, float decayParam, float sustainParam, float releaseParam)
+void Envelope::setEnvelopeParams (float attackParam, float decayParam, float sustainParam, float releaseParam, float shapeParam)
 {
     attack = attackParam;
     decay = decayParam;
     sustain = sustainParam;
     release = releaseParam;
+    shape = shapeParam;
 }
 
 Envelope::envState Envelope::getEnvelopeState()
@@ -68,7 +70,19 @@ float Envelope::getRelease()
 
 float Envelope::getenvelopeLevel()
 {
-    return envelopeLevel;
+    switch (envelopeState)
+    {
+        case idleState:
+            return 0.0f;
+            break;
+        case attackState:
+            return envelopeLevel;
+            break;
+            
+        default:
+            return std::powf(envelopeLevel, calulateShapeCoeff(shape)) ;
+            break;
+    }
 }
 
 void Envelope::startEnvelope()

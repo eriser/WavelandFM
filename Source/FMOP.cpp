@@ -14,8 +14,7 @@ FMOP::FMOP()
 : angleDelta (0.0f),
   currentAngle (0.0f),
   OpMidiPitch (0.0f),
-  OpLinearFM (0.0f),
-  envShape (0.85f)
+  OpLinearFM (0.0f)
 {
     OpENV.setEnvelopeState(Envelope::idleState);
 }
@@ -49,9 +48,9 @@ void FMOP::ResetPhase()
     currentAngle = float_Pi * 1.5f;
 }
 
-void FMOP::SetENVParam(float attack, float decay, float sustain, float release)
+void FMOP::SetENVParam(float attack, float decay, float sustain, float release, float shape)
 {
-    OpENV.setEnvelopeParams(attack, decay, sustain, release);
+    OpENV.setEnvelopeParams(attack, decay, sustain, release, shape);
 }
 
 void FMOP::StartOP(float midiNote, float sampleRate)
@@ -78,5 +77,5 @@ float FMOP::RenderOP()
     currentAngle += angleDelta;
     if (currentAngle >= twopi)
         currentAngle -= twopi;
-    return SineOfAngle (currentAngle + OpLinearFM) * std::pow(OpENV.getenvelopeLevel(), calulateShapeCoeff(envShape));
+    return SineOfAngle (currentAngle + OpLinearFM) * OpENV.getenvelopeLevel();
 }
