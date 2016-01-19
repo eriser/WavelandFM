@@ -16,8 +16,11 @@ Envelope::Envelope ()
   sustain (1.0f),
   release (0.1f),
   shape (0.5f),
+  dScaler(0.0f),
+  rScaler(0.0f),
   envelopeLevel(0.0),
-  envelopeState (idleState)
+  envelopeState (idleState),
+  statePrev (idleState)
 {
 }
 Envelope::~Envelope()
@@ -75,12 +78,25 @@ float Envelope::getenvelopeLevel()
         case idleState:
             return 0.0f;
             break;
+            
         case attackState:
             return envelopeLevel;
             break;
             
+        case decayState:
+            return envelopeLevel;
+            break;
+            
+        case sustainState:
+            return envelopeLevel;
+            break;
+            
+        case releaseState:
+            return std::powf(envelopeLevel / rScaler, calulateShapeCoeff(shape)) * rScaler;
+            break;
+            
         default:
-            return std::powf(envelopeLevel, calulateShapeCoeff(shape)) ;
+            return 0.0f;
             break;
     }
 }
@@ -112,6 +128,8 @@ void Envelope::renderEnvelope ()
             envlopeTick = 0.0;
             releasetick = 0.0;
             envelopeLevel = 0.0;
+            
+            statePrev = idleState;
             break;
             
         case attackState:
@@ -126,19 +144,27 @@ void Envelope::renderEnvelope ()
             
             ++envlopeTick;
             
+            statePrev = attackState;
             break;
             
         case decayState:
+            
+            if (statePrev != decayState)
+                dScaler = envelopeLevel;
             
             if (envelopeLevel <= sustain)
             {
                 envelopeState = sustainState;
                 envelopeLevel = sustain;
+                
+                statePrev = decayState;
                 break;
             }
             else
             {
                 envelopeLevel -= decaySlope;
+                
+                statePrev = decayState;
                 break;
             }
             
@@ -148,9 +174,13 @@ void Envelope::renderEnvelope ()
             
             ++envlopeTick;
             
+            statePrev = sustainState;
             break;
             
         case releaseState:
+            
+            if (statePrev != releaseState)
+                rScaler = envelopeLevel;
             
             envelopeLevel -= releaseSlope;
             
@@ -162,6 +192,7 @@ void Envelope::renderEnvelope ()
             ++envlopeTick;
             ++releasetick;
             
+            statePrev = releaseState;
             break;
             
         default:

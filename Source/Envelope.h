@@ -67,10 +67,10 @@ public:
     }
     
 private:
-    float sampleRate, attack, decay, sustain, release, shape;
+    float sampleRate, attack, decay, sustain, release, shape, dScaler, rScaler;
     double envelopeLevel;
     int envlopeTick, releasetick;
-    envState envelopeState;
+    envState envelopeState, statePrev;
     
     float SCoef [52] =
     {
