@@ -67,7 +67,7 @@ public:
     }
     
 private:
-    float sampleRate, attack, decay, sustain, release, shape, dScaler, rScaler;
+    float sampleRate, attack, decay, sustain, release, shape, dScaler, rScaler, decayDropoff;
     double envelopeLevel;
     int envlopeTick, releasetick;
     envState envelopeState, statePrev;
