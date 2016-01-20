@@ -17,7 +17,7 @@ currentBend(0.0f),
 currentMidiPitch(0.0f)
 {
     Op1.SetENVParam(0.2f, 0.5f, 0.2f, 0.6f, 0.85f);
-    Op2.SetENVParam(0.01f, 0.3f, 0.7f, 0.4f, 0.85f);
+    Op2.SetENVParam(0.0f, 0.3f, 0.7f, 0.4f, 0.85f);
     index21 = 13.0f * std::powf( 0.0f /*0.56f*/, 2.0f);
 }
 
