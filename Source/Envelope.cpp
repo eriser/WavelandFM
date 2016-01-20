@@ -187,6 +187,7 @@ void Envelope::renderEnvelope ()
             if (envelopeLevel < 0.0)
             {
                 envelopeLevel = 0.0;
+                envelopeState = idleState;
             }
             
             ++envlopeTick;
