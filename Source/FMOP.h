@@ -49,8 +49,6 @@ public:
     
     inline float SineOfAngle (float angle)
     {
-        if (std::isnan(angle))
-            return 0.0f;
         float index;
         int indexIntPart;
         float indexDecimelPart;
