@@ -16,7 +16,7 @@ Envelope::Envelope ()
   sustain (1.0f),
   release (0.1f),
   shape (0.5f),
-
+  //asf
   attackSlope(0.1f),
   decaySlope(0.1f),
   releaseSlope(0.1f),
@@ -182,7 +182,8 @@ void Envelope::renderEnvelope ()
             
             if (envelopeLevel - releaseSlope <= 0.0f)
             {
-                envelopeLevel = 0.0;
+                envelopeLevel = 0.0f;
+                envelopeOutLevel = 0.0f;
                 envelopeState = idleState;
             }
             
