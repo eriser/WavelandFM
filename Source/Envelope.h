@@ -67,7 +67,8 @@ public:
     }
     
 private:
-    float sampleRate, attack, decay, sustain, release, shape, dScaler, rScaler, rScaler2;
+    float sampleRate, attack, decay, sustain, release, shape;
+    float attackSlope, decaySlope, releaseSlope, decayShapeCoef, releaseShapeCoef, dScaler, rScaler, rScaler2;;
     float envelopeLevel, envelopeOutLevel;
     envState envelopeState, statePrev;
     

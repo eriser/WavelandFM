@@ -16,8 +16,8 @@ currentMidiNote(0.0f),
 currentBend(0.0f),
 currentMidiPitch(0.0f)
 {
-    Op1.SetENVParam(0.2f, 0.5f, 0.5f, 0.6f, 0.85f);
-    Op2.SetENVParam(0.0f, 0.3f, 0.7f, 0.4f, 0.85f);
+    Op1.SetENVParam(0.0f, 0.3f, 0.6f, 0.6f, 0.85f, getSampleRate());
+    Op2.SetENVParam(0.0f, 0.5f, 0.4f, 0.4f, 0.66f, getSampleRate());
     index21 = 13.0f * std::powf( 0.56f, 2.0f);
 }
 
@@ -30,7 +30,7 @@ bool FMSynthVoice::canPlaySound(juce::SynthesiserSound *sound)
 
 void FMSynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* /**/, int /**/)
 {
-    level = /*velocity*/ 1.0f * 0.15f;
+    level = velocity * 0.15f;
     noteVelocity = std::powf(velocity, 2.0f) ;
     
     currentMidiNote = (float) midiNoteNumber;

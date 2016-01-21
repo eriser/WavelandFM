@@ -16,9 +16,17 @@ Envelope::Envelope ()
   sustain (1.0f),
   release (0.1f),
   shape (0.5f),
+
+  attackSlope(0.1f),
+  decaySlope(0.1f),
+  releaseSlope(0.1f),
+  decayShapeCoef(0.5f),
+  releaseShapeCoef(0.5f),
+
   dScaler(0.0f),
   rScaler (0.0f),
   rScaler2 (0.0f),
+
   envelopeLevel(0.0),
   envelopeOutLevel(0.0f),
   envelopeState (idleState),
@@ -42,6 +50,13 @@ void Envelope::setEnvelopeParams (float attackParam, float decayParam, float sus
     sustain = sustainParam;
     release = releaseParam;
     shape = shapeParam;
+    
+    attackSlope = 1.0f / ((attack * sampleRate * 2.0f) + 1.0f);
+    decaySlope = (1.0f - sustain) / ((decay * sampleRate * 2.0f) + 1.0f);
+    releaseSlope = sustain / ((release * sampleRate * 2.0) + 1.0f);
+    
+    decayShapeCoef = calulateShapeCoeff (shape);
+    releaseShapeCoef = calulateShapeCoeff (shape);
 }
 
 Envelope::envState Envelope::getEnvelopeState()
@@ -95,11 +110,6 @@ void Envelope::endEnvelope()
 
 void Envelope::renderEnvelope ()
 {
-    double attackSlope = 1.0f / ((attack * sampleRate * 2.0f) + 1.0f);
-    double decaySlope = (1.0f - sustain) / ((decay * sampleRate * 2.0f) + 1.0f);
-    double releaseSlope = sustain / ((release * sampleRate * 2.0) + 1.0f);
-    
-    
     switch (envelopeState)
     {
             
@@ -137,7 +147,7 @@ void Envelope::renderEnvelope ()
             if (statePrev != decayState)
                 dScaler = envelopeLevel;
             
-            if (envelopeLevel <= sustain)
+            if (envelopeLevel - decaySlope <= sustain)
             {
                 envelopeState = sustainState;
                 envelopeLevel = sustain;
@@ -148,12 +158,8 @@ void Envelope::renderEnvelope ()
             }
             envelopeLevel -= decaySlope;
             
-            envelopeOutLevel = std::powf((envelopeLevel - sustain) / (dScaler - sustain), calulateShapeCoeff(shape)) * (dScaler - sustain) + sustain;
-            if (std::isnan(envelopeOutLevel))
-            {
-                envelopeOutLevel = envelopeLevel;
-            }
-            
+            envelopeOutLevel = std::powf((envelopeLevel - sustain) / (dScaler - sustain), decayShapeCoef) * (dScaler - sustain) + sustain;
+
             statePrev = decayState;
             break;
             
@@ -171,16 +177,18 @@ void Envelope::renderEnvelope ()
             {
                 rScaler = envelopeLevel;
                 rScaler2 = envelopeOutLevel;
+                releaseSlope = rScaler / ((release * sampleRate * 2.0) + 1.0f);
             }
-
-            envelopeLevel -= releaseSlope;
-            envelopeOutLevel = std::powf(envelopeLevel / rScaler, calulateShapeCoeff(shape)) * rScaler2;
             
-            if (envelopeLevel < 0.0f)
+            if (envelopeLevel - releaseSlope <= 0.0f)
             {
                 envelopeLevel = 0.0f;
+                envelopeOutLevel = 0.0f;
                 envelopeState = idleState;
             }
+            
+            envelopeLevel -= releaseSlope;
+            envelopeOutLevel = std::powf(envelopeLevel / rScaler, releaseShapeCoef) * rScaler2;
             
             statePrev = releaseState;
             break;
