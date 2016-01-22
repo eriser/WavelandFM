@@ -48,10 +48,10 @@ void FMOP::ResetPhase()
     currentAngle = float_Pi * 1.5f;
 }
 
-void FMOP::SetENVParam(float attack, float decay, float sustain, float release, float shape, float sampleRate)
+void FMOP::SetENVParam(float attack, float decay, float sustain, float release, float dshape, float rshape, float sampleRate)
 {
     OpENV.setSampleRate(sampleRate);
-    OpENV.setEnvelopeParams(attack, decay, sustain, release, shape);
+    OpENV.setEnvelopeParams(attack, decay, sustain, release, dshape, rshape);
 }
 
 void FMOP::StartOP(float midiNote, float sampleRate)

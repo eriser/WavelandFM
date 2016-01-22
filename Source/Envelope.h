@@ -21,7 +21,7 @@ public:
     
     void setSampleRate(float SRate);
     
-    void setEnvelopeParams (float attackParam, float decayParam, float sustainParam, float releaseParam, float shapeParam);
+    void setEnvelopeParams (float attackParam, float decayParam, float sustainParam, float releaseParam, float dShapeParam, float rShapeParam);
     
     enum envState
     {
@@ -67,7 +67,7 @@ public:
     }
     
 private:
-    float sampleRate, attack, decay, sustain, release, shape;
+    float sampleRate, attack, decay, sustain, release, dShape, rShape;
     float attackSlope, decaySlope, releaseSlope, decayShapeCoef, releaseShapeCoef, dScaler, rScaler, rScaler2;;
     float envelopeLevel, envelopeOutLevel;
     envState envelopeState, statePrev;

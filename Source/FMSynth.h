@@ -32,6 +32,14 @@ public:
     
     bool canPlaySound (SynthesiserSound* sound) override;
     
+    void setEnvParams (int whichOp, float att, float dec, float sus, float rel, float dshape, float rshape);
+    
+    void setIndex (float newindex)
+    {
+        idx21Param = newindex;
+    }
+    void setTune (int whichOp, float tuneParam);
+    
     void startNote (int midiNoteNumber, float velocity, SynthesiserSound* /**/, int /**/) override;
     
     void stopNote (float /**/, bool /**/) override;
@@ -46,6 +54,7 @@ public:
     }
     
 private:
+    
     void processBlock (AudioBuffer<float>& outputbuffer, int startSample, int numSamples);
     
     float level, noteVelocity;
@@ -53,6 +62,8 @@ private:
     float currentMidiNote, currentBend, currentMidiPitch, index21;
     
     float const twopi = 2 * float_Pi;
+    
+    float idx21Param, Op1Tune, Op2Tune;
     
     FMOP Op1, Op2;
 };

@@ -56,10 +56,42 @@ public:
 
 private:
     //==============================================================================
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavelandFmAudioProcessor)
     
     Synthesiser synth;
     
+    struct paramStruc
+    {
+        String nameLong;
+        String nameShort;
+        float DefaultValue;
+        AudioParameterFloat* param;
+    };
+    
+    std::vector<paramStruc> OpParamVec
+    {
+        {"Attack",       "att", 0.01f, nullptr},
+        {"Decay",        "dec", 0.01f, nullptr},
+        {"Sustain",      "sus", 1.00f, nullptr},
+        {"Release",      "rel", 0.10f, nullptr},
+        {"DecayShape",   "dsh", 0.50f, nullptr},
+        {"ReleaseShape", "rsh", 0.50f, nullptr},
+        {"Tune",         "tun", 0.00f, nullptr}
+    };
+    
+    struct OpStruct
+    {
+        String OpName;
+        std::vector<paramStruc> Parms;
+    };
+    
+    OpStruct Operators [2]
+    {
+        {"OperatorOne", OpParamVec},
+        {"OperatorTwo", OpParamVec}
+    };
+
     void innitSynth();
 };
 

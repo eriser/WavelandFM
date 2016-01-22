@@ -15,8 +15,9 @@ Envelope::Envelope ()
   decay (0.0f),
   sustain (1.0f),
   release (0.1f),
-  shape (0.5f),
-  //asf
+  dShape (0.5f),
+  rShape (0.5f),
+
   attackSlope(0.1f),
   decaySlope(0.1f),
   releaseSlope(0.1f),
@@ -43,20 +44,22 @@ void Envelope::setSampleRate(float SRate)
     sampleRate = SRate;
 }
 
-void Envelope::setEnvelopeParams (float attackParam, float decayParam, float sustainParam, float releaseParam, float shapeParam)
+void Envelope::setEnvelopeParams (float attackParam, float decayParam, float sustainParam, float releaseParam,
+                                  float dShapeParam, float rShapeParam)
 {
     attack = attackParam;
     decay = decayParam;
     sustain = sustainParam;
     release = releaseParam;
-    shape = shapeParam;
+    dShape = dShapeParam;
+    rShape = rShapeParam;
     
     attackSlope = 1.0f / ((attack * sampleRate * 2.0f) + 1.0f);
     decaySlope = (1.0f - sustain) / ((decay * sampleRate * 2.0f) + 1.0f);
     releaseSlope = sustain / ((release * sampleRate * 2.0) + 1.0f);
     
-    decayShapeCoef = calulateShapeCoeff (shape);
-    releaseShapeCoef = calulateShapeCoeff (shape);
+    decayShapeCoef = calulateShapeCoeff (dShape);
+    releaseShapeCoef = calulateShapeCoeff (rShape);
 }
 
 Envelope::envState Envelope::getEnvelopeState()

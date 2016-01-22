@@ -24,7 +24,7 @@ public:
     void setOpPitch(float oppitch);
     void setOpLinearFm(float linearFM);
     void ResetPhase();
-    void SetENVParam (float attack, float decay, float sustain, float release, float shape, float sampleRate);
+    void SetENVParam (float attack, float decay, float sustain, float release, float dshape, float rshape, float sampleRate);
     void StartOP(float midiNote, float sampleRate);
     void StopOp();
     float RenderOP ();

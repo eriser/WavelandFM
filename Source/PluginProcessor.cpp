@@ -16,6 +16,18 @@
 WavelandFmAudioProcessor::WavelandFmAudioProcessor()
 {
     innitSynth();
+    for (int i = 0; i < 2; ++i)
+    {
+        for (int j = 0; j < OpParamVec.size(); ++j)
+        {
+            addParameter(OpParamVec[j].param = new AudioParameterFloat (OpParamVec[j].nameLong,
+                                                                             OpParamVec[j].nameShort,
+                                                                             0.0f,
+                                                                             1.0f,
+                                                                             OpParamVec[j].DefaultValue
+                                                                                           ));
+        }
+    }
 }
 
 WavelandFmAudioProcessor::~WavelandFmAudioProcessor()

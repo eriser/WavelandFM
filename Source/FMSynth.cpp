@@ -14,11 +14,15 @@ FMSynthVoice::FMSynthVoice():
 noteVelocity(0.0f),
 currentMidiNote(0.0f),
 currentBend(0.0f),
-currentMidiPitch(0.0f)
+currentMidiPitch(0.0f),
+idx21Param (0.56),
+Op1Tune(0.0f),
+Op2Tune(0.0f)
+
 {
-    Op1.SetENVParam(0.0f, 0.3f, 0.6f, 0.6f, 0.85f, getSampleRate());
-    Op2.SetENVParam(0.0f, 0.5f, 0.4f, 0.4f, 0.66f, getSampleRate());
-    index21 = 13.0f * std::powf( 0.56f, 2.0f);
+    Op1.SetENVParam(0.0f, 0.3f, 0.6f, 0.6f, 0.6f, 0.85f, getSampleRate());
+    Op2.SetENVParam(0.0f, 0.5f, 0.4f, 0.4f, 0.7f, 0.66f, getSampleRate());
+    index21 = 13.0f * std::powf( index21, 2.0f);
 }
 
 FMSynthVoice::~FMSynthVoice() {}
@@ -26,6 +30,37 @@ FMSynthVoice::~FMSynthVoice() {}
 bool FMSynthVoice::canPlaySound(juce::SynthesiserSound *sound)
 {
     return true;
+}
+
+void FMSynthVoice::setEnvParams(int whichOp, float att, float dec, float sus, float rel, float dshape, float rshape)
+{
+    switch (whichOp)
+    {
+        case 1:
+            Op1.SetENVParam(att, dec, sus, rel, dshape, rshape, getSampleRate());
+            break;
+        case 2:
+            Op2.SetENVParam(att, dec, sus, rel, dshape, rshape, getSampleRate());
+            break;
+        default:
+            break;
+    }
+}
+
+void FMSynthVoice::setTune(int whichOp, float tuneParam)
+{
+    switch (whichOp)
+    {
+        case 1:
+            Op1Tune = tuneParam - 0.5f * 48.0f;
+            break;
+            
+        case 2:
+            Op2Tune = tuneParam - 0.5f * 48.0f;
+            break;
+        default:
+            break;
+    }
 }
 
 void FMSynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* /**/, int /**/)
@@ -39,8 +74,8 @@ void FMSynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSoun
     Op1.ResetPhase();
     Op2.ResetPhase();
     
-    Op1.StartOP (currentMidiPitch, getSampleRate());
-    Op2.StartOP (currentMidiPitch, getSampleRate());
+    Op1.StartOP (currentMidiPitch + Op1Tune, getSampleRate());
+    Op2.StartOP (currentMidiPitch + Op2Tune, getSampleRate());
     
 }
 
@@ -54,8 +89,8 @@ void FMSynthVoice::pitchWheelMoved(int newValue)
 {
     currentBend = (newValue - 8192.0f) / 8192.0f;
     currentMidiPitch = currentMidiNote + currentBend;
-    Op1.setOpPitch (currentMidiPitch);
-    Op2.setOpPitch (currentMidiPitch);
+    Op1.setOpPitch (currentMidiPitch + Op1Tune);
+    Op2.setOpPitch (currentMidiPitch + Op2Tune);
     
     Op1.updateAngleDelta();
     Op2.updateAngleDelta();
