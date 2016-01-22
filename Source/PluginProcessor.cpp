@@ -15,23 +15,41 @@
 //==============================================================================
 WavelandFmAudioProcessor::WavelandFmAudioProcessor()
 {
-    innitSynth();
     for (int i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < OpParamVec.size(); ++j)
+        for (int j = 0; j < Ops[i].Parms.size(); ++j)
         {
-            addParameter(OpParamVec[j].param = new AudioParameterFloat (OpParamVec[j].nameLong,
-                                                                             OpParamVec[j].nameShort,
-                                                                             0.0f,
-                                                                             1.0f,
-                                                                             OpParamVec[j].DefaultValue
-                                                                                           ));
+            addParameter(Ops[i].Parms[j].param = new AudioParameterFloat (Ops[i].Parms[j].nameLong,
+                                                                          Ops[i].Parms[j].nameShort,
+                                                                          0.0f,
+                                                                          1.0f,
+                                                                          Ops[i].Parms[j].DefaultValue));
         }
     }
+    innitSynth();
 }
 
 WavelandFmAudioProcessor::~WavelandFmAudioProcessor()
 {
+}
+
+void WavelandFmAudioProcessor::updateParameters()
+{
+    for (int h = 8; --h > 0 ; )
+    {
+        if (FMSynthVoice* myVoice = dynamic_cast<FMSynthVoice*> ( synth.getVoice(h) ))
+        {
+            for (int i = 0; i < 2; ++i)
+            {
+                myVoice->setEnvParams(i, *(Ops[i].Parms[0].param),
+                                         *(Ops[i].Parms[1].param),
+                                         *(Ops[i].Parms[2].param),
+                                         *(Ops[i].Parms[3].param),
+                                         *(Ops[i].Parms[4].param),
+                                         *(Ops[i].Parms[5].param));
+            }
+        }
+    }
 }
 
 //==============================================================================
@@ -44,6 +62,23 @@ void WavelandFmAudioProcessor::innitSynth()
     {
         synth.addVoice(new FMSynthVoice());
     }
+    
+    for (int h = numVoices; --h > 0 ; )
+    {
+        if (FMSynthVoice* myVoice = dynamic_cast<FMSynthVoice*> ( synth.getVoice(h) ))
+        {
+            for (int i = 0; i < 2; ++i)
+            {
+                myVoice->setEnvParams(i, *(Ops[i].Parms[0].param),
+                                         *(Ops[i].Parms[1].param),
+                                         *(Ops[i].Parms[2].param),
+                                         *(Ops[i].Parms[3].param),
+                                         *(Ops[i].Parms[4].param),
+                                         *(Ops[i].Parms[5].param));
+            }
+        }
+    }
+
     
     synth.addSound(new FMSynthSound());
 }

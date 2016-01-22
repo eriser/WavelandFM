@@ -30,6 +30,7 @@ public:
     void releaseResources() override;
 
     void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
+    void updateParameters ();
 
     //==============================================================================
     AudioProcessorEditor* createEditor() override;
@@ -86,7 +87,7 @@ private:
         std::vector<paramStruc> Parms;
     };
     
-    OpStruct Operators [2]
+    OpStruct Ops [2]
     {
         {"OperatorOne", OpParamVec},
         {"OperatorTwo", OpParamVec}

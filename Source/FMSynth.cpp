@@ -36,10 +36,10 @@ void FMSynthVoice::setEnvParams(int whichOp, float att, float dec, float sus, fl
 {
     switch (whichOp)
     {
-        case 1:
+        case 0:
             Op1.SetENVParam(att, dec, sus, rel, dshape, rshape, getSampleRate());
             break;
-        case 2:
+        case 1:
             Op2.SetENVParam(att, dec, sus, rel, dshape, rshape, getSampleRate());
             break;
         default:
