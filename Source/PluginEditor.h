@@ -18,7 +18,8 @@
 //==============================================================================
 /**
 */
-class WavelandFmAudioProcessorEditor  : public AudioProcessorEditor
+class WavelandFmAudioProcessorEditor  : public AudioProcessorEditor,
+                                        public ComboBox::Listener
 {
 public:
     WavelandFmAudioProcessorEditor (WavelandFmAudioProcessor&);
@@ -27,11 +28,11 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
 private:
     class ParameterSlider;
     
-    ScopedPointer<ParameterSlider> attackSlider;
+    ScopedPointer<ParameterSlider> attackSlider, decaySlider, sustainSlider, releaseSlider, dshapeSlider, rshapeSlider;
     
     
     

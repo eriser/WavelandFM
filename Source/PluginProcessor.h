@@ -87,11 +87,16 @@ private:
         std::vector<paramStruc> Parms;
     };
     
-    OpStruct Ops [2]
+    std::vector<OpStruct> Ops
     {
         {"Op1", OpParamVec},
         {"Op2", OpParamVec}
     };
+public:
+    std::vector<OpStruct> getOpArray()
+    {
+        return Ops;
+    }
 
     void innitSynth();
 };

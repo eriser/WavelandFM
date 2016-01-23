@@ -17,49 +17,49 @@ class WavelandFmAudioProcessorEditor::ParameterSlider   : public Slider,
 private Timer
 {
 public:
-    ParameterSlider (AudioProcessorParameter& p)
-    : Slider (p.getName (256)), param (p)
+    ParameterSlider (AudioProcessorParameter* p)
+    : Slider (p->getName (256)), paramBeingEdited (p)
     {
         setRange (0.0, 1.0, 0.0);
         startTimerHz (30);
         updateSliderPos();
         Slider::setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
         Slider::setTextBoxStyle(Slider::TextBoxBelow, false, 60, 15);
-        Slider::setColour(juce::Slider::rotarySliderFillColourId, Colours::lightcyan);
-        Slider::setColour(juce::Slider::rotarySliderOutlineColourId, Colours::cyan.darker(0.2f));
+        Slider::setColour(juce::Slider::rotarySliderFillColourId, Colours::black);
+        Slider::setColour(juce::Slider::rotarySliderOutlineColourId, Colours::black);
         Slider::setColour(juce::Slider::textBoxBackgroundColourId, Colour::fromFloatRGBA (0.0, 0.0, 0.0, 0.0));
         Slider::setColour(juce::Slider::textBoxOutlineColourId, Colour::fromFloatRGBA (0.0, 0.0, 0.0, 0.0));
-        Slider::setColour(juce::Slider::textBoxTextColourId, Colours::lightcyan);
+        Slider::setColour(juce::Slider::textBoxTextColourId, Colours::black);
         Slider::setSize(60, 60);
     }
     
     void valueChanged() override
     {
-        param.setValue ((float) Slider::getValue());
+        paramBeingEdited->setValue ((float) Slider::getValue());
     }
     
     void timerCallback() override       { updateSliderPos(); }
     
-    void startedDragging() override     { param.beginChangeGesture(); }
-    void stoppedDragging() override     { param.endChangeGesture();   }
+    void startedDragging() override     { paramBeingEdited->beginChangeGesture(); }
+    void stoppedDragging() override     { paramBeingEdited->endChangeGesture();   }
     
-    double getValueFromText (const String& text) override   { return param.getValueForText (text); }
-    String getTextFromValue (double value) override         { return param.getText ((float) value, 1024); }
+    double getValueFromText (const String& text) override   { return paramBeingEdited->getValueForText (text); }
+    String getTextFromValue (double value) override         { return paramBeingEdited->getText ((float) value, 1024); }
     
     void updateSliderPos()
     {
-        const float newValue = param.getValue();
+        const float newValue = paramBeingEdited->getValue();
         
         if (newValue != (float) Slider::getValue())
             Slider::setValue (newValue);
     }
     
-    void changeSliderParam (AudioProcessorParameter& newParam)
+    void changeSliderParam (AudioProcessorParameter* newParam)
     {
-        param = newParam;
+        paramBeingEdited = newParam;
     }
     
-    AudioProcessorParameter& param;
+    AudioProcessorParameter* paramBeingEdited;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParameterSlider)
 };
@@ -70,13 +70,20 @@ WavelandFmAudioProcessorEditor::WavelandFmAudioProcessorEditor (WavelandFmAudioP
 {
     pickOp.addItem("Op 1", 1);
     pickOp.addItem("Op 2", 2);
+    pickOp.addListener(this);
     addAndMakeVisible(pickOp);
     
-    addAndMakeVisible(attackSlider = new ParameterSlider(*owner.getParameters()[0]));
+    addAndMakeVisible(attackSlider = new ParameterSlider(owner.getOpArray()[0].Parms[0].param));
+    addAndMakeVisible(decaySlider = new ParameterSlider(owner.getOpArray()[0].Parms[1].param));
+    addAndMakeVisible(sustainSlider = new ParameterSlider(owner.getOpArray()[0].Parms[2].param));
+    addAndMakeVisible(releaseSlider = new ParameterSlider(owner.getOpArray()[0].Parms[3].param));
+    addAndMakeVisible(dshapeSlider = new ParameterSlider(owner.getOpArray()[0].Parms[4].param));
+    addAndMakeVisible(rshapeSlider = new ParameterSlider(owner.getOpArray()[0].Parms[5].param));
+    
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     
-    setSize (400, 300);
+    setSize (600, 400);
 }
 
 WavelandFmAudioProcessorEditor::~WavelandFmAudioProcessorEditor()
@@ -84,6 +91,19 @@ WavelandFmAudioProcessorEditor::~WavelandFmAudioProcessorEditor()
 }
 
 //==============================================================================
+void WavelandFmAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBoxThatHasChanged)
+{
+    if (comboBoxThatHasChanged == &pickOp)
+    {
+        attackSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[0].param);
+        decaySlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[1].param);
+        sustainSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[2].param);
+        releaseSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[3].param);
+        dshapeSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[4].param);
+        rshapeSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[5].param);
+    }
+}
+
 void WavelandFmAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colours::white);
@@ -119,4 +139,18 @@ void WavelandFmAudioProcessorEditor::resized()
     attackSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
     attackSlider->setSize (distanceBetween, rowDistance);
 
+    decaySlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
+    decaySlider->setSize (distanceBetween, rowDistance);
+    
+    sustainSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
+    sustainSlider->setSize (distanceBetween, rowDistance);
+    
+    releaseSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
+    releaseSlider->setSize (distanceBetween, rowDistance);
+    
+    dshapeSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
+    dshapeSlider->setSize (distanceBetween, rowDistance);
+    
+    rshapeSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
+    rshapeSlider->setSize (distanceBetween, rowDistance);
 }
