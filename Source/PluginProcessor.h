@@ -78,7 +78,7 @@ private:
         {"Release",      "rel", 0.10f, nullptr},
         {"DecayShape",   "dsh", 0.50f, nullptr},
         {"ReleaseShape", "rsh", 0.50f, nullptr},
-        {"Tune",         "tun", 0.00f, nullptr}
+        {"Tune",         "tun", 0.50f, nullptr}
     };
     
     struct OpStruct
@@ -89,8 +89,8 @@ private:
     
     OpStruct Ops [2]
     {
-        {"OperatorOne", OpParamVec},
-        {"OperatorTwo", OpParamVec}
+        {"Op1", OpParamVec},
+        {"Op2", OpParamVec}
     };
 
     void innitSynth();

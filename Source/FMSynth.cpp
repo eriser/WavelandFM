@@ -22,7 +22,7 @@ Op2Tune(0.0f)
 {
     Op1.SetENVParam(0.0f, 0.3f, 0.6f, 0.6f, 0.6f, 0.85f, getSampleRate());
     Op2.SetENVParam(0.0f, 0.5f, 0.4f, 0.4f, 0.7f, 0.66f, getSampleRate());
-    index21 = 13.0f * std::powf( index21, 2.0f);
+    index21 = 13.0f * std::powf( idx21Param, 2.0f);
 }
 
 FMSynthVoice::~FMSynthVoice() {}
@@ -51,12 +51,12 @@ void FMSynthVoice::setTune(int whichOp, float tuneParam)
 {
     switch (whichOp)
     {
-        case 1:
-            Op1Tune = tuneParam - 0.5f * 48.0f;
+        case 0:
+            Op1Tune = (tuneParam - 0.5f) * 48.0f;
             break;
             
-        case 2:
-            Op2Tune = tuneParam - 0.5f * 48.0f;
+        case 1:
+            Op2Tune = (tuneParam - 0.5f) * 48.0f;
             break;
         default:
             break;

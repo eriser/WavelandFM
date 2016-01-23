@@ -19,8 +19,8 @@ WavelandFmAudioProcessor::WavelandFmAudioProcessor()
     {
         for (int j = 0; j < Ops[i].Parms.size(); ++j)
         {
-            addParameter(Ops[i].Parms[j].param = new AudioParameterFloat (Ops[i].Parms[j].nameLong,
-                                                                          Ops[i].Parms[j].nameShort,
+            addParameter(Ops[i].Parms[j].param = new AudioParameterFloat (Ops[i].OpName + Ops[i].Parms[j].nameLong,
+                                                                          Ops[i].OpName + Ops[i].Parms[j].nameShort,
                                                                           0.0f,
                                                                           1.0f,
                                                                           Ops[i].Parms[j].DefaultValue));
@@ -35,7 +35,7 @@ WavelandFmAudioProcessor::~WavelandFmAudioProcessor()
 
 void WavelandFmAudioProcessor::updateParameters()
 {
-    for (int h = 8; --h > 0 ; )
+    for (int h = 8; --h >= 0 ; )
     {
         if (FMSynthVoice* myVoice = dynamic_cast<FMSynthVoice*> ( synth.getVoice(h) ))
         {
@@ -47,6 +47,8 @@ void WavelandFmAudioProcessor::updateParameters()
                                          *(Ops[i].Parms[3].param),
                                          *(Ops[i].Parms[4].param),
                                          *(Ops[i].Parms[5].param));
+                
+                myVoice->setTune     (i, *(Ops[i].Parms[6].param));
             }
         }
     }
@@ -75,6 +77,8 @@ void WavelandFmAudioProcessor::innitSynth()
                                          *(Ops[i].Parms[3].param),
                                          *(Ops[i].Parms[4].param),
                                          *(Ops[i].Parms[5].param));
+                
+                myVoice->setTune     (i, *(Ops[i].Parms[6].param));
             }
         }
     }
@@ -144,6 +148,7 @@ void WavelandFmAudioProcessor::changeProgramName (int index, const String& newNa
 void WavelandFmAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     synth.setCurrentPlaybackSampleRate (sampleRate);
+    updateParameters();
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
@@ -156,6 +161,8 @@ void WavelandFmAudioProcessor::releaseResources()
 
 void WavelandFmAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    updateParameters();
+    
     const int numSamples = buffer.getNumSamples();
     synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 }
