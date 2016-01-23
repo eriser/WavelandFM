@@ -95,12 +95,12 @@ void WavelandFmAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBoxTha
 {
     if (comboBoxThatHasChanged == &pickOp)
     {
-        attackSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[0].param);
-        decaySlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[1].param);
-        sustainSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[2].param);
-        releaseSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[3].param);
-        dshapeSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[4].param);
-        rshapeSlider->changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[5].param);
+        attackSlider->   changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[0].param);
+        decaySlider->    changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[1].param);
+        sustainSlider->  changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[2].param);
+        releaseSlider->  changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[3].param);
+        dshapeSlider->   changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[4].param);
+        rshapeSlider->   changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[5].param);
     }
 }
 

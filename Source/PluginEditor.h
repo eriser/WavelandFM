@@ -34,8 +34,6 @@ private:
     
     ScopedPointer<ParameterSlider> attackSlider, decaySlider, sustainSlider, releaseSlider, dshapeSlider, rshapeSlider;
     
-    
-    
     ComboBox pickOp;
     
     
