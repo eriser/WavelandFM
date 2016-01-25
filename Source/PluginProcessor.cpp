@@ -26,6 +26,16 @@ WavelandFmAudioProcessor::WavelandFmAudioProcessor()
                                                                           Ops[i].Parms[j].DefaultValue));
         }
     }
+    
+    for (int i = 0; i < 2; ++i)
+    {
+        addParameter(VoiceParamVec[i].param = new AudioParameterFloat (VoiceParamVec[i].nameLong,
+                                                                       VoiceParamVec[i].nameShort,
+                                                                       0.0f,
+                                                                       1.0f,
+                                                                       VoiceParamVec[i].DefaultValue));
+    }
+    
     innitSynth();
 }
 
@@ -50,6 +60,8 @@ void WavelandFmAudioProcessor::updateParameters()
                 
                 myVoice->setTune     (i, *(Ops[i].Parms[6].param));
             }
+            
+            myVoice->setVoiceParams(*VoiceParamVec[0].param, *VoiceParamVec[1].param);
         }
     }
 }
@@ -80,6 +92,7 @@ void WavelandFmAudioProcessor::innitSynth()
                 
                 myVoice->setTune     (i, *(Ops[i].Parms[6].param));
             }
+            myVoice->setVoiceParams(*VoiceParamVec[0].param, *VoiceParamVec[1].param);
         }
     }
 

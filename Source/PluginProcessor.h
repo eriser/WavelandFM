@@ -92,13 +92,26 @@ private:
         {"Op1", OpParamVec},
         {"Op2", OpParamVec}
     };
+    
+    std::vector<paramStruc> VoiceParamVec
+    {
+        {"Index 2->1", "idx21", 0.56f, nullptr},
+        {"BendAmound", "bend", 0.5f, nullptr}
+    };
+    
+    void innitSynth();
+    
 public:
     std::vector<OpStruct> getOpArray()
     {
         return Ops;
     }
+    
+    std::vector<paramStruc> getVoiceParams()
+    {
+        return VoiceParamVec;
+    }
 
-    void innitSynth();
 };
 
 

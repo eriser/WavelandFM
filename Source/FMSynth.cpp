@@ -15,9 +15,10 @@ noteVelocity(0.0f),
 currentMidiNote(0.0f),
 currentBend(0.0f),
 currentMidiPitch(0.0f),
-idx21Param (0.56),
 Op1Tune(0.0f),
-Op2Tune(0.0f)
+Op2Tune(0.0f),
+idx21Param (0.56),
+bendAount (1.0f)
 
 {
     Op1.SetENVParam(0.0f, 0.3f, 0.6f, 0.6f, 0.6f, 0.85f, getSampleRate());
@@ -30,6 +31,15 @@ FMSynthVoice::~FMSynthVoice() {}
 bool FMSynthVoice::canPlaySound(juce::SynthesiserSound *sound)
 {
     return true;
+}
+
+void FMSynthVoice::setVoiceParams(float idx21, float bendamount)
+{
+    idx21Param = idx21;
+    
+    bendAount = bendamount;
+    
+    index21 = 13.0f * std::powf( idx21Param, 2.0f);
 }
 
 void FMSynthVoice::setEnvParams(int whichOp, float att, float dec, float sus, float rel, float dshape, float rshape)
@@ -66,7 +76,7 @@ void FMSynthVoice::setTune(int whichOp, float tuneParam)
 void FMSynthVoice::startNote(int midiNoteNumber, float velocity, SynthesiserSound* /**/, int /**/)
 {
     level = velocity * 0.15f;
-    noteVelocity = std::powf(velocity, 2.0f) ;
+    noteVelocity = std::powf(velocity, 2.0f);
     
     currentMidiNote = (float) midiNoteNumber;
     currentMidiPitch = currentMidiNote + currentBend;
@@ -87,7 +97,7 @@ void FMSynthVoice::stopNote(float /**/, bool /**/)
 
 void FMSynthVoice::pitchWheelMoved(int newValue)
 {
-    currentBend = (newValue - 8192.0f) / 8192.0f;
+    currentBend = 2 * bendAount * (newValue - 8192.0f) / 8192.0f;
     currentMidiPitch = currentMidiNote + currentBend;
     Op1.setOpPitch (currentMidiPitch + Op1Tune);
     Op2.setOpPitch (currentMidiPitch + Op2Tune);

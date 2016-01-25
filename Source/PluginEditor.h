@@ -29,13 +29,22 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void setupLabel (Label& labelToUse, juce::Component *sliderToUse);
+    
 private:
     class ParameterSlider;
     
-    ScopedPointer<ParameterSlider> attackSlider, decaySlider, sustainSlider, releaseSlider, dshapeSlider, rshapeSlider;
+    Label OpSelectLabel;
     
     ComboBox pickOp;
     
+    Label attackLabel, decayLabel, sustainLabel, releaseLabel, dshapeLabel, rshapeLabel, tuneLabel;
+    
+    ScopedPointer<ParameterSlider> attackSlider, decaySlider, sustainSlider, releaseSlider, dshapeSlider, rshapeSlider, tuneSlider;
+    
+    Label IndexLabel, BendAmoundLabel;
+    
+    ScopedPointer<ParameterSlider> IndexSlider, BendAmoundSlider;
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

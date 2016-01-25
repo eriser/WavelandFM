@@ -66,19 +66,48 @@ public:
 
 //==============================================================================
 WavelandFmAudioProcessorEditor::WavelandFmAudioProcessorEditor (WavelandFmAudioProcessor& owner)
-    : AudioProcessorEditor (owner)
+    : AudioProcessorEditor (owner),
+      OpSelectLabel     (String::empty, "Select Operator"),
+      attackLabel       (String::empty, "Attack:"),
+      decayLabel        (String::empty, "Decay:"),
+      sustainLabel      (String::empty, "Sustain:"),
+      releaseLabel      (String::empty, "Release:"),
+      dshapeLabel       (String::empty, "Decay Shape:"),
+      rshapeLabel       (String::empty, "Release Shape:"),
+      tuneLabel         (String::empty, "Tune:"),
+
+      IndexLabel        (String::empty, "Index:"),
+      BendAmoundLabel   (String::empty, "Bend Amount:")
 {
     pickOp.addItem("Op 1", 1);
     pickOp.addItem("Op 2", 2);
     pickOp.addListener(this);
     addAndMakeVisible(pickOp);
+    ComboBox* pickOpPrt = &pickOp;
+    pickOp.setSelectedId(1);
     
-    addAndMakeVisible(attackSlider = new ParameterSlider(owner.getOpArray()[0].Parms[0].param));
-    addAndMakeVisible(decaySlider = new ParameterSlider(owner.getOpArray()[0].Parms[1].param));
-    addAndMakeVisible(sustainSlider = new ParameterSlider(owner.getOpArray()[0].Parms[2].param));
-    addAndMakeVisible(releaseSlider = new ParameterSlider(owner.getOpArray()[0].Parms[3].param));
-    addAndMakeVisible(dshapeSlider = new ParameterSlider(owner.getOpArray()[0].Parms[4].param));
-    addAndMakeVisible(rshapeSlider = new ParameterSlider(owner.getOpArray()[0].Parms[5].param));
+    addAndMakeVisible(attackSlider =     new ParameterSlider(owner.getOpArray()[0].Parms[0].param));
+    addAndMakeVisible(decaySlider =      new ParameterSlider(owner.getOpArray()[0].Parms[1].param));
+    addAndMakeVisible(sustainSlider =    new ParameterSlider(owner.getOpArray()[0].Parms[2].param));
+    addAndMakeVisible(releaseSlider =    new ParameterSlider(owner.getOpArray()[0].Parms[3].param));
+    addAndMakeVisible(dshapeSlider =     new ParameterSlider(owner.getOpArray()[0].Parms[4].param));
+    addAndMakeVisible(rshapeSlider =     new ParameterSlider(owner.getOpArray()[0].Parms[5].param));
+    addAndMakeVisible(tuneSlider =       new ParameterSlider(owner.getOpArray()[0].Parms[6].param));
+    
+    addAndMakeVisible(IndexSlider =      new ParameterSlider(owner.getVoiceParams()[0].param));
+    addAndMakeVisible(BendAmoundSlider = new ParameterSlider(owner.getVoiceParams()[1].param));
+    
+    setupLabel(OpSelectLabel, pickOpPrt);
+    setupLabel(attackLabel, attackSlider);
+    setupLabel(decayLabel, decaySlider);
+    setupLabel(sustainLabel, sustainSlider);
+    setupLabel(releaseLabel, releaseSlider);
+    setupLabel(dshapeLabel, dshapeSlider);
+    setupLabel(rshapeLabel, rshapeSlider);
+    setupLabel(tuneLabel, tuneSlider);
+    
+    setupLabel(IndexLabel, IndexSlider);
+    setupLabel(BendAmoundLabel, BendAmoundSlider);
     
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -101,7 +130,22 @@ void WavelandFmAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBoxTha
         releaseSlider->  changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[3].param);
         dshapeSlider->   changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[4].param);
         rshapeSlider->   changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[5].param);
+        tuneSlider->     changeSliderParam(getProcessor().getOpArray()[pickOp.getSelectedItemIndex()].Parms[6].param);
+     
     }
+}
+
+void WavelandFmAudioProcessorEditor::setupLabel(juce::Label& labelToUse, juce::Component *sliderToUse)
+{
+    addAndMakeVisible(labelToUse);
+    labelToUse.attachToComponent(sliderToUse, false);
+    labelToUse.setFont(Font ("Calibri", 17.0f, Font::italic));
+    labelToUse.setSize(60, 20);
+    labelToUse.setColour(Label::textColourId, juce::Colours::black);
+    labelToUse.setColour(Label::backgroundColourId, juce::Colour::fromFloatRGBA(0.0, 0.0, 0.0, 0.0));
+    labelToUse.setJustificationType(Justification::centred);
+    labelToUse.setBorderSize(BorderSize<int> (12));
+    //labelToUse.setComponentEffect(&labelBackGroundGlow);
 }
 
 void WavelandFmAudioProcessorEditor::paint (Graphics& g)
@@ -110,7 +154,7 @@ void WavelandFmAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::black);
     g.setFont (15.0f);
-    //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+
 }
 
 void WavelandFmAudioProcessorEditor::resized()
@@ -133,24 +177,34 @@ void WavelandFmAudioProcessorEditor::resized()
     int distanceBetween {jmax (sliderArea.getWidth()/divider, sliderMinDistance)};
     int rowDistance {jmax (sliderRow2.getHeight(), sliderMinDistance)};
     
-    pickOp.setBounds (sliderArea.removeFromLeft (distanceBetween));
-    pickOp.setSize   (distanceBetween, rowDistance);
+    pickOp.             setBounds (sliderArea.removeFromLeft (distanceBetween));
+    pickOp.             setSize   (distanceBetween, rowDistance / 2.0);
     
-    attackSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
-    attackSlider->setSize (distanceBetween, rowDistance);
+    attackSlider->      setBounds (sliderArea.removeFromLeft (distanceBetween));
+    attackSlider->      setSize (distanceBetween, rowDistance);
 
-    decaySlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
-    decaySlider->setSize (distanceBetween, rowDistance);
+    decaySlider->       setBounds (sliderArea.removeFromLeft (distanceBetween));
+    decaySlider->       setSize (distanceBetween, rowDistance);
     
-    sustainSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
-    sustainSlider->setSize (distanceBetween, rowDistance);
+    sustainSlider->     setBounds (sliderArea.removeFromLeft (distanceBetween));
+    sustainSlider->     setSize (distanceBetween, rowDistance);
     
-    releaseSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
-    releaseSlider->setSize (distanceBetween, rowDistance);
+    releaseSlider->     setBounds (sliderArea.removeFromLeft (distanceBetween));
+    releaseSlider->     setSize (distanceBetween, rowDistance);
     
-    dshapeSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
-    dshapeSlider->setSize (distanceBetween, rowDistance);
+    dshapeSlider->      setBounds (sliderArea.removeFromLeft (distanceBetween));
+    dshapeSlider->      setSize (distanceBetween, rowDistance);
     
-    rshapeSlider->setBounds (sliderArea.removeFromLeft (distanceBetween));
-    rshapeSlider->setSize (distanceBetween, rowDistance);
+    rshapeSlider->      setBounds (sliderArea.removeFromLeft (distanceBetween));
+    rshapeSlider->      setSize (distanceBetween, rowDistance);
+    
+    tuneSlider->        setBounds (sliderArea.removeFromLeft (distanceBetween));
+    tuneSlider->        setSize (distanceBetween, rowDistance);
+    
+    
+    IndexSlider->       setBounds (sliderRow2.removeFromLeft (distanceBetween));
+    IndexSlider->       setSize (distanceBetween, rowDistance);
+    
+    BendAmoundSlider->  setBounds (sliderRow2.removeFromLeft (distanceBetween));
+    BendAmoundSlider->  setSize (distanceBetween, rowDistance);
 }
